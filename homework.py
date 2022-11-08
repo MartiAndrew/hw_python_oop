@@ -131,8 +131,8 @@ class Swimming(Training):
             * self.duration)
 
 
-def show_training_info(self) -> InfoMessage:
-    return super().show_training_info()
+    def show_training_info(self) -> InfoMessage:
+        return super().show_training_info()
 
 
 def read_package(workout_type: str, data: list[int]) -> Training:
