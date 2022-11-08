@@ -1,5 +1,6 @@
 from typing import List, Dict
 
+
 class InfoMessage:
     """Информационное сообщение о тренировке."""
 
@@ -139,9 +140,9 @@ class Swimming(Training):
         return super().show_training_info()
 
 
-def read_package(workout_type: str, data: list[int]) -> Training:
+def read_package(workout_type: str, data: List[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_class_d: dict[str, Training] = {'SWM': Swimming,
+    training_class_d: Dict[str, Training] = {'SWM': Swimming,
                                              'RUN': Running,
                                              'WLK': SportsWalking
                                              }
