@@ -97,8 +97,8 @@ class SportsWalking(Training):
         mean_speed_mc = self.get_mean_speed() * self.KMH_IN_MSEC
         result = (self.CALORIES_WEIGHT_MULTIPLIER * self.weight
                   + (mean_speed_mc ** 2 / (self.height / self.CM_IN_M))
-                  * self.CALORIES_SPEED_HEIGHT_MULTIPLIER * self.weight) \
-                 * self.duration * self.MIN_IN_H
+                  * self.CALORIES_SPEED_HEIGHT_MULTIPLIER
+                  * self.weight) * self.duration * self.MIN_IN_H
         return result
 
     def show_training_info(self) -> InfoMessage:
