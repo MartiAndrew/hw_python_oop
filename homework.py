@@ -34,16 +34,14 @@ class Training:
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-        result = self.action * self.LEN_STEP / self.M_IN_KM
-        return result
+        return self.action * self.LEN_STEP / self.M_IN_KM
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-        result = self.get_distance() / self.duration
-        return result
+        return self.get_distance() / self.duration
 
-    def get_spent_calories(self) -> None:
-        return None
+    def get_spent_calories(self) -> float:
+        return "Потраченные каллории"
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -51,7 +49,7 @@ class Training:
                            self.duration,
                            self.get_distance(),
                            self.get_mean_speed(),
-                           self.get_spent_calories()
+                           self.get_spent_calories(),
                            )
 
 
@@ -59,9 +57,6 @@ class Running(Training):
     """Тренировка: бег."""
     CALORIES_MEAN_SPEED_MULTIPLIER = 18
     CALORIES_MEAN_SPEED_SHIFT = 1.79
-
-    def __init__(self, action: int, duration: float, weight: float) -> None:
-        super().__init__(action, duration, weight)
 
     def get_spent_calories(self) -> float:
         return ((self.CALORIES_MEAN_SPEED_MULTIPLIER
@@ -148,6 +143,8 @@ def read_package(workout_type: str, data: List[int]) -> Training:
                                              }
     if workout_type in training_class_d:
         return training_class_d[workout_type](*data)
+    raise ValueError('Ошибка в тренировке')
+
 
 
 def main(training: Training) -> None:
