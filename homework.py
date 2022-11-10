@@ -16,10 +16,12 @@ class InfoMessage:
                 f'Дистанция: {self.distance:.3f} км; '
                 f'Ср. скорость: {self.speed:.3f} км/ч; '
                 f'Потрачено ккал: {self.calories:.3f}.')
-    # Здравствуй, Алексей, приятно познакомиться. Исправил класс на датакласс как советовал,
-    # как то красиво сделать get_message не смог, видел что кто-то делает через вывод словаря,
-    # но мне не понятно тогда что я должен ставить в атрибуты InfoClass в методе show_training_info
+    # Здравствуй, Алексей, приятно познакомиться. Исправил класс на
+    # датакласс как советовал, как то красиво сделать get_message не смог,
+    # видел что кто-то делает через вывод словаря, но мне не понятно тогда,
+    # что я должен ставить в атрибуты InfoClass в методе show_training_info
     # при возврате.
+
 
 class Training:
     """Базовый класс тренировки."""
@@ -44,7 +46,7 @@ class Training:
 
     def get_spent_calories(self) -> float:
         return None
-        # Сначала исправил строку эту на докстинг, но пайтест меня сразу отругал:
+        # Сначала исправил строку эту на докстинг, но pytest меня отругал:
         # test_homework.py:194: in test_Training_get_spent_calories
         # assert training.get_spent_calories() is None, (
         # E   AssertionError: Метод `get_spent_calories` класса `Training`
