@@ -1,5 +1,5 @@
 from typing import List, Dict
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 
 
 @dataclass
@@ -16,7 +16,10 @@ class InfoMessage:
                 f'Дистанция: {self.distance:.3f} км; '
                 f'Ср. скорость: {self.speed:.3f} км/ч; '
                 f'Потрачено ккал: {self.calories:.3f}.')
-
+    # Здравствуй, Алексей, приятно познакомиться. Исправил класс на датакласс как советовал,
+    # как то красиво сделать get_message не смог, видел что кто-то делает через вывод словаря,
+    # но мне не понятно тогда что я должен ставить в атрибуты InfoClass в методе show_training_info
+    # при возврате.
 
 class Training:
     """Базовый класс тренировки."""
@@ -41,6 +44,13 @@ class Training:
 
     def get_spent_calories(self) -> float:
         return None
+        # Сначала исправил строку эту на докстинг, но пайтест меня сразу отругал:
+        # test_homework.py:194: in test_Training_get_spent_calories
+        # assert training.get_spent_calories() is None, (
+        # E   AssertionError: Метод `get_spent_calories` класса `Training`
+        # не должен высчитывать потреченные калории,
+        # так как для каждого типа тренировки своя формула подсчета калорий.
+        # E   assert 'Потраченные каллории' is None
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -117,8 +127,9 @@ def read_package(workout_type: str, data: List[int]) -> Training:
         'RUN': [Running, 3],
         'WLK': [SportsWalking, 4]
     }
-    if workout_type in training_class_d and len(data) == training_class_d[workout_type][1]:
-        return training_class_d[workout_type][0](*data)
+    if workout_type in training_class_d:
+        if len(data) == training_class_d[workout_type][1]:
+            return training_class_d[workout_type][0](*data)
     raise ValueError('Ошибка в пакете данных')
 
 
