@@ -1,5 +1,5 @@
 from typing import List, Dict
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 
 @dataclass
@@ -10,17 +10,15 @@ class InfoMessage:
     speed: float
     calories: float
 
+    message = ('Тип тренировки: {training_type}; '
+               'Длительность: {duration:.3f} ч.; '
+               'Дистанция: {distance:.3f} км; '
+               'Ср. скорость: {speed:.3f} км/ч; '
+               'Потрачено ккал: {calories:.3f}.'
+               )
+
     def get_message(self) -> str:
-        return (f'Тип тренировки: {self.training_type}; '
-                f'Длительность: {self.duration:.3f} ч.; '
-                f'Дистанция: {self.distance:.3f} км; '
-                f'Ср. скорость: {self.speed:.3f} км/ч; '
-                f'Потрачено ккал: {self.calories:.3f}.')
-    # Здравствуй, Алексей, приятно познакомиться. Исправил класс на
-    # датакласс как советовал, как то красиво сделать get_message не смог,
-    # видел что кто-то делает через вывод словаря, но мне не понятно тогда,
-    # что я должен ставить в атрибуты InfoClass в методе show_training_info
-    # при возврате.
+        return self.message.format(**asdict(self))
 
 
 class Training:
@@ -45,14 +43,7 @@ class Training:
         return self.get_distance() / self.duration
 
     def get_spent_calories(self) -> float:
-        return None
-        # Сначала исправил строку эту на докстинг, но pytest меня отругал:
-        # test_homework.py:194: in test_Training_get_spent_calories
-        # assert training.get_spent_calories() is None, (
-        # E   AssertionError: Метод `get_spent_calories` класса `Training`
-        # не должен высчитывать потреченные калории,
-        # так как для каждого типа тренировки своя формула подсчета калорий.
-        # E   assert 'Потраченные каллории' is None
+        """Получить количество затраченных калорий."""
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -88,9 +79,9 @@ class SportsWalking(Training):
         self.height = height
 
     def get_spent_calories(self) -> float:
-        mean_speed_mc = self.get_mean_speed() * self.KMH_IN_MSEC
         result = (self.CALORIES_WEIGHT_MULTIPLIER * self.weight
-                  + (mean_speed_mc ** 2 / (self.height / self.CM_IN_M))
+                  + ((self.get_mean_speed() * self.KMH_IN_MSEC) ** 2
+                     / (self.height / self.CM_IN_M))
                   * self.CALORIES_SPEED_HEIGHT_MULTIPLIER
                   * self.weight) * self.duration * self.MIN_IN_H
         return result
@@ -124,15 +115,17 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: List[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_class_d: Dict[str, List[Training, int]] = {
-        'SWM': [Swimming, 5],
-        'RUN': [Running, 3],
-        'WLK': [SportsWalking, 4]
+    training_class_d = {
+        'SWM': Swimming,
+        'RUN': Running,
+        'WLK': SportsWalking
     }
     if workout_type in training_class_d:
-        if len(data) == training_class_d[workout_type][1]:
-            return training_class_d[workout_type][0](*data)
-    raise ValueError('Ошибка в пакете данных')
+        try:
+            return training_class_d[workout_type](*data)
+        except TypeError as error1:
+            print(f'{error1} - "Ошибка в кол-ве параметров пакета данных!"')
+    raise AttributeError('Ошибка в пакете данных')
 
 
 def main(training: Training) -> None:
