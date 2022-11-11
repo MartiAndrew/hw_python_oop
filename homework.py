@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List
 from dataclasses import dataclass, asdict
 
 
@@ -123,7 +123,7 @@ def read_package(workout_type: str, data: List[int]) -> Training:
     if workout_type in training_class_d:
         try:
             return training_class_d[workout_type](*data)
-        except TypeError as error1:
+        except TypeError as error1: #конкретную ошибку исключил и закоммен-вал
             print(f'{error1} - "Ошибка в кол-ве параметров пакета данных!"')
     raise AttributeError('Ошибка в пакете данных')
 
