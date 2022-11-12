@@ -47,7 +47,7 @@ class Training:
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-        return InfoMessage(self.__class__.__name__,
+        return InfoMessage(type(self).__name__,
                            self.duration,
                            self.get_distance(),
                            self.get_mean_speed(),
@@ -120,12 +120,13 @@ def read_package(workout_type: str, data: List[int]) -> Training:
         'RUN': Running,
         'WLK': SportsWalking
     }
-    if workout_type in training_class_d:
-        try:
-            return training_class_d[workout_type](*data)
-        except TypeError as error1:  # конкретную ошибку исключил и заком-вал
-            print(f'{error1} - "Ошибка в кол-ве параметров пакета данных!"')
-    raise AttributeError('Ошибка в пакете данных')
+
+    try:
+        return training_class_d[workout_type](*data)
+    except TypeError:
+        raise TypeError("Ошибка в кол-ве параметров пакета данных!")
+    except KeyError:
+        raise NotImplementedError("неподдерживаемая тренировка")
 
 
 def main(training: Training) -> None:
@@ -139,6 +140,7 @@ if __name__ == '__main__':
         ('RUN', [15000, 1, 75]),
         ('WLK', [9000, 1, 75, 180]),
     ]
+
 
     for workout_type, data in packages:
         training = read_package(workout_type, data)
